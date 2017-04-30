@@ -1,6 +1,7 @@
 {
   "name": "chrome-extension-script-executer",
   "version": "0.0.1",
+  "description": "Module that allow to execute code into the Javascript context (not isolated world) of a tab from an Extension",
   "main": "src/index.js",
   "repository": "git@github.com:ManRueda/chrome-extension-script-executer.git",
   "author": "Manuel Rueda <manuel.rueda.un@gmail.com>",
