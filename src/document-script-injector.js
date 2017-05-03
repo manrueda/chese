@@ -31,7 +31,6 @@ function injectScriptTag (code) {
 
 function getWrappedCode (fn, guid, params = []) {
   return `
-    debugger
     window['${sessionGuid}'](${fn}, '${guid}', ${JSON.stringify(params)})
     //# sourceURL=Chese://Chese/${guid}.js
   `

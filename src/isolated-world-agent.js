@@ -2,20 +2,26 @@ import { connectPortName } from './constants'
 import * as chromeEnhancer from './chrome-enhancer'
 import guidGenerator from './guid'
 import { TYPE_INJECT, TARGET_CURRENT_TAB, TARGET_INSPECTED_WINDOWS, codeInjector } from './code-injector'
+export { TARGET_CURRENT_TAB, TARGET_INSPECTED_WINDOWS }
 
-export default () => {
+export default ({target, timeout}) => {
+  if (target !== TARGET_CURRENT_TAB && TARGET_INSPECTED_WINDOWS) {
+    throw new Error('The target must be TARGET_CURRENT_TAB or TARGET_INSPECTED_WINDOWS')
+  }
   codeInjector({
     type: TYPE_INJECT,
-    target: TARGET_CURRENT_TAB,
+    target: target,
     code: './isolated-world-layer.js'
   })
   let port
   const instance = {
     run: (code, params) => new Promise((resolve, reject) => {
       const guid = guidGenerator()
+      let timeoutId
 
       const resultListener = ({guid: rstGuid, payload}) => {
         if (guid === rstGuid) {
+          clearTimeout(timeoutId)
           port.off('run-return', resultListener)
           port.off('run-error', errorListener)
 
@@ -26,6 +32,7 @@ export default () => {
 
       const errorListener = ({guid: rstGuid, error}) => {
         if (guid === rstGuid) {
+          clearTimeout(timeoutId)
           var err = new Error(error.message)
           err.stack = error.stack
 
@@ -37,6 +44,12 @@ export default () => {
       port.on('run-error', errorListener)
 
       port.emit('run', {guid, code: code.toString(), params})
+      timeoutId = setTimeout(() => {
+        debugger;
+        port.off('run-return', resultListener)
+        port.off('run-error', errorListener)
+        reject(new Error(`The script didn't finish in ${timeout / 1000} seconds`))
+      }, timeout)
     })
   }
   return chromeEnhancer.tabs.current()

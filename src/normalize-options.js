@@ -1,9 +1,8 @@
 const guid = require('./guid')
+import { TARGET_CURRENT_TAB } from './isolated-world-agent'
 export default (options) => {
   options = options || {}
-  options.strategy = options.strategy || 'inspectedWindow'
-  options.key = options.key || guid()
-  options.interval = options.interval || 50
-  options.timeout = options.timeout || 50000
+  options.target = options.target || TARGET_CURRENT_TAB
+  options.timeout = options.timeout || 5000
   return options
 }
