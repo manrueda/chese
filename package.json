@@ -1,15 +1,31 @@
 {
-  "name": "chrome-extension-script-executer",
+  "name": "chese",
   "version": "0.0.1",
   "description": "Module that allow to execute code into the Javascript context (not isolated world) of a tab from an Extension",
-  "main": "src/index.js",
-  "repository": "git@github.com:ManRueda/chrome-extension-script-executer.git",
+  "main": "dist/chese.js",
+  "repository": "git@github.com:ManRueda/chese.git",
   "author": "Manuel Rueda <manuel.rueda.un@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "standard": "^10.0.2"
+    "istanbul": "^0.4.5",
+    "proxyquire": "^1.7.11",
+    "standard": "^10.0.2",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.3",
+    "webpack": "^2.4.1"
   },
   "scripts": {
-    "lint": "standard"
-  }
+    "lint": "standard",
+    "build": "webpack",
+    "watch": "webpack --watch --config webpack.config.extension.js",
+    "test": "tape tests/**/*.js | tap-spec",
+    "coverage": "istanbul cover node_modules/tape/bin/tape tests/**/*.js"
+  },
+  "standard": {
+    "globals": [
+      "chrome",
+      "chese"
+    ]
+  },
+  "dependencies": {}
 }
