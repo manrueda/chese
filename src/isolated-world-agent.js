@@ -1,18 +1,24 @@
 import { connectPortName } from './constants'
 import * as chromeEnhancer from './chrome-enhancer'
+import devtoolsInjector from './devtools-injector'
 import guidGenerator from './guid'
-import { TYPE_INJECT, TARGET_CURRENT_TAB, TARGET_INSPECTED_WINDOWS, codeInjector } from './code-injector'
-export { TARGET_CURRENT_TAB, TARGET_INSPECTED_WINDOWS }
+import { TYPE_INJECT, TARGET_CURRENT_TAB, TARGET_DEVTOOL, codeInjector } from './code-injector'
+export { TARGET_CURRENT_TAB, TARGET_DEVTOOL }
 
 export default ({target, timeout}) => {
-  if (target !== TARGET_CURRENT_TAB && TARGET_INSPECTED_WINDOWS) {
-    throw new Error('The target must be TARGET_CURRENT_TAB or TARGET_INSPECTED_WINDOWS')
+  if (target !== TARGET_CURRENT_TAB && TARGET_DEVTOOL) {
+    throw new Error('The target must be TARGET_CURRENT_TAB or TARGET_DEVTOOL')
   }
-  codeInjector({
-    type: TYPE_INJECT,
-    target: target,
-    code: './isolated-world-layer.js'
-  })
+  if (target === TARGET_DEVTOOL) {
+    devtoolsInjector()
+  } else if (target === TARGET_CURRENT_TAB) {
+    codeInjector({
+      type: TYPE_INJECT,
+      target: target,
+      code: './isolated-world-layer.js'
+    })
+  }
+
   let port
   const instance = {
     run: (code, params) => new Promise((resolve, reject) => {

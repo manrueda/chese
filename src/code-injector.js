@@ -1,7 +1,7 @@
-export const TARGET_CURRENT_TAB = Symbol('TARGET_CURRENT_TAB')
-export const TARGET_INSPECTED_WINDOWS = Symbol('ARGET_INSPECTED_WINDOWS')
-export const TYPE_INJECT = Symbol('TYPE_INJECT')
-export const TYPE_RUN = Symbol('TYPE_RUN')
+export const TARGET_CURRENT_TAB = 'TARGET_CURRENT_TAB'
+export const TARGET_DEVTOOL = 'TARGET_DEVTOOL'
+export const TYPE_INJECT = 'TYPE_INJECT'
+export const TYPE_RUN = 'TYPE_RUN'
 
 export const codeInjector = ({ type, target, code}) => new Promise((resolve, reject) => {
   function cb (err, result) {
@@ -18,9 +18,9 @@ export const codeInjector = ({ type, target, code}) => new Promise((resolve, rej
     injectCurrentTab(code)
   } else if (target === TARGET_CURRENT_TAB && type === TYPE_RUN) {
     runCurrentTab(code, cb)
-  } else if (target === TARGET_INSPECTED_WINDOWS && type === TYPE_INJECT) {
+  } else if (target === TARGET_DEVTOOL && type === TYPE_INJECT) {
     injectInspectedWindow(code)
-  } else if (target === TARGET_INSPECTED_WINDOWS && type === TYPE_RUN) {
+  } else if (target === TARGET_DEVTOOL && type === TYPE_RUN) {
     runInspectedWindow(code, cb)
   }
 })
